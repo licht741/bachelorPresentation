@@ -1,0 +1,68 @@
+\documentclass[utf8,russian]{beamer}
+\mode<presentation> {
+  \usetheme{Madrid}
+}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian,english]{babel}
+
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamercolor{footline}{}
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{}%
+    Н. М. Нежевский (Мехмат ЮФУ)
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{}%
+    Ростов-на-Дону, 2016
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{}%
+  Стр. \insertframenumber{} из \inserttotalframenumber \hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\title{\small{Цветовая поддержка вывода консоли интерпретатора языка Haskell GHCi}}
+\vspace{15pt}%
+\author{\small{%
+Н. М. Нежевский\\%
+\emph{Направление подготовки:}~Фундаментальная информатика и \\информационные технологии\\%
+\emph{Научный руководитель:} старший преподаватель В.~Н.~Брагилевский}\\%
+\vspace{15pt}%
+    Южный федеральный университет\\
+    Институт математики, механики и компьютерных наук
+    имени~И.\,И.\,Воровича%
+}
+\date{\small{Ростов-на-Дону, 2016}}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Содержание}
+\tableofcontents
+\end{frame}
+
+\section{Постановка задачи}
+\begin{frame}
+\frametitle{Постановка задачи}
+\begin{itemize}
+  \item \textbf{Анализ возможных подходов к реализации подсветки вывода.}
+  \item \textbf{Изучение программной структуры GHCi.}
+  \item \textbf{Программная реализация цветовой поддержки вывода интерпретатора GHCi.} 
+\end{itemize}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
