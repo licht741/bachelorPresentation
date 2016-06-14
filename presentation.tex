@@ -5,7 +5,7 @@
 
 \usepackage{graphicx}
 \usepackage{booktabs}
-
+\usepackage{listings}
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
 \usepackage[russian,english]{babel}
@@ -81,16 +81,96 @@
 \end{frame}
 \onslide<1>
 \begin{frame}{Анализ полученной реализации}
+
 \begin{block}{Недостатки реализации}
-\begin{enumerate}
-  \item Окрашивание возможно только для стандартных типов и классов типов
-  \item Не поддерживается окрашивание переменных
-\end{enumerate}
+
+  \begin{enumerate}
+    \item Окрашивание возможно только для стандартных типов и классов типов
+    \item Не поддерживается окрашивание переменных
+  \end{enumerate}
 \end{block}
 
 \onslide<2>
+
 \begin{block}{Вывод}
 Полученная реализация решает поставленную задачу, однако имеет ряд ограничений
+\end{block}
+
+\end{frame}
+
+\section{Система вывода в GHC}
+
+\begin{frame}[fragile]
+\frametitle{Система вывода в GHC}
+\begin{block}{Система вывода}
+Система вывода в GHC основана на принципе структурной печати
+\end{block}
+
+\begin{block}{Используемые типы}
+Тип Doc является примитивом структурной печати
+\begin{lstlisting}[language=Haskell]
+data Doc
+ = Empty
+ | NilAbove Doc
+ | Nest FastInt Doc
+ | Union Doc Doc
+ | ...
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{SDoc и Outputable}
+
+\begin{block}{Тип SDoc}
+Тип SDoc является обёрткой над типом Doc. Он содержит дополнительную информацию для вывода
+\begin{lstlisting}[language=Haskell]
+type SDoc = PprStyle -> Doc
+\end{lstlisting}
+\end{block}
+
+\begin{block}{Класс типов Outputable}
+Класс типов Outputable предоставляет интерфейс для типов, поддерживающих функцию структурной печати.
+\begin{lstlisting}[language=Haskell]
+class Outputable a where
+	ppr :: a -> SDoc
+\end{lstlisting}
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Изменения в модуле Outputable}
+
+\begin{block}{Модель вывода}
+Была разработана модель вывода аналогичная модели вывода в GHCi, по которой были выведены необходимые изменения
+\end{block}
+
+\begin{block}{Изменение типа SDoc}
+В обёртку над типом Doc добавлена информация о цвете
+\begin{lstlisting}[language=Haskell]
+type SDoc = SDocStyle -> Doc
+data SDocStyle = {
+    pprStyle :: PprStyle,
+    pprColor :: PprColor
+}
+\end{lstlisting}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Класс типов ColorOutputable}
+
+\begin{block}{ColorOutputable}
+Создан класс типов ColorOutputable, предоставляющий интерфейс для вывода с подсветкой
+\begin{lstlisting}[language=Haskell]
+class Outputable a => ColorOutputable a where
+  cppr :: a -> SDoc
+\end{lstlisting}
+\end{block}
+
+\begin{block}{}
+Для полной поддержки введённых изменений необходимо заменить Outputable на ColorOutputable
 \end{block}
 
 \end{frame}
