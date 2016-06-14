@@ -56,9 +56,9 @@
 \begin{frame}
 \frametitle{Постановка задачи}
 \begin{itemize}
-  \item \textbf{Анализ возможных подходов к реализации подсветки вывода.}
-  \item \textbf{Изучение программной структуры GHCi.}
-  \item \textbf{Программная реализация цветовой поддержки вывода интерпретатора GHCi.} 
+  \item Анализ возможных подходов к реализации подсветки вывода
+  \item Изучение программной структуры GHCi
+  \item Программная реализация цветовой поддержки вывода интерпретатора GHCi
 \end{itemize}
 \end{frame}
 
@@ -98,12 +98,12 @@
 
 \end{frame}
 
-\section{Система вывода в GHC}
+\section{Система печати в GHC}
 
 \begin{frame}[fragile]
 \frametitle{Система вывода в GHC}
-\begin{block}{Система вывода}
-Система вывода в GHC основана на принципе структурной печати
+\begin{block}{Система печати}
+Система печати в GHC основана на принципе структурной печати
 \end{block}
 
 \begin{block}{Используемые типы}
@@ -123,7 +123,7 @@ data Doc
 \frametitle{SDoc и Outputable}
 
 \begin{block}{Тип SDoc}
-Тип SDoc является обёрткой над типом Doc. Он содержит дополнительную информацию для вывода
+Тип SDoc является обёрткой над типом Doc. Он содержит дополнительную информацию для печати
 \begin{lstlisting}[language=Haskell]
 type SDoc = PprStyle -> Doc
 \end{lstlisting}
@@ -142,8 +142,8 @@ class Outputable a where
 \begin{frame}[fragile]
 \frametitle{Изменения в модуле Outputable}
 
-\begin{block}{Модель вывода}
-Была разработана модель вывода аналогичная модели вывода в GHCi, по которой были выведены необходимые изменения
+\begin{block}{Модель печати}
+Была разработана модель печати аналогичная модели в GHCi, по которой были выведены необходимые изменения
 \end{block}
 
 \begin{block}{Изменение типа SDoc}
@@ -162,7 +162,7 @@ data SDocStyle = {
 \frametitle{Класс типов ColorOutputable}
 
 \begin{block}{ColorOutputable}
-Создан класс типов ColorOutputable, предоставляющий интерфейс для вывода с подсветкой
+Создан класс типов ColorOutputable, предоставляющий интерфейс для печати с подсветкой
 \begin{lstlisting}[language=Haskell]
 class Outputable a => ColorOutputable a where
   cppr :: a -> SDoc
@@ -175,6 +175,27 @@ class Outputable a => ColorOutputable a where
 
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Пример внедрения изменений}
+
+\begin{block}{}
+На основе изменений в качестве примера была переработана mkExpectedActualMsg
+\end{block}
+
+\begin{block}{Изменённая функция mkExpectedActualMsg}
+\begin{lstlisting}
+mkExpectedActualMsg :: Type -> Type -> SDoc
+mkExpectedActualMsg exp_ty act_ty
+  = vcat [ colorize cRed $ ptext 
+         (text "Expected type:") <+> cppr exp_ty
+         , colorize cRed $ ptext 
+         (text "  Actual type:") <+> cppr act_ty]
+\end{lstlisting}
+\end{block}
+
+\end{frame}
+
+\section{Полученные результаты}
 \begin{frame}{Полученные результаты}
 \begin{itemize}
   \item Создана программная реализация, частично решающая поставленную задачу
